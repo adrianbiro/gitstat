@@ -1,0 +1,111 @@
+#!/bin/bash
+
+#TODO description
+#TODO getstamp print just the name of the repository, not a path above the status message
+#TODO functions #{{{
+function getstamp(){
+  local v
+  v=$(pwd)
+  local lastdir
+  lastdir="$("${v[@]:22}")"
+  printf '%s\n' "${lastdir}" >> "$tmpfile"
+}
+
+
+#TODO colors or multiple files via head
+function fileprobe(){
+  if [[ ! -f "$tmpfile" ]]; then
+    touch /tmp/gitstatus.file
+  fi
+  printf '%s\n' "$(date +'%Y-%m-%d-%T')" > "$tmpfile"
+}
+
+
+#TODO colors or multiple files via head -f; less -x
+function seestat() {
+  less "$tmpfile"
+}
+#}}}
+
+#TODO
+# lines=$(git status -bs | wc -1) if [[ "$lines" -eq 1 ]]; then
+#  local numdir; numdir=$(( $(ls $wdir | wc -l) - 1 ))
+# too long
+function gstat(){
+
+  wdir="/home/adrian/bin/gits"
+  declare -a commit; commit=("")
+  declare -a total; total=("")
+  local lines; lines=$(git status -bs | wc -l)
+  local llwd; llwd=$(pwd)
+  local lastdir; lastdir=$(ls $wdir | sort -r | awk 'NR==1 {print $0}')
+  if [[ "$lines" -eq 1 ]]; then
+    total+=("$(pwd)")
+  else
+    commit+=("$(pwd)")
+  fi
+  git status -bs
+  if [[ "${total[-1]}" = "${llwd:22}" ]]; then #TODO condition
+    for i in "${commit[@]}"
+    do
+      echo ${i:22}
+    done
+  fi
+#TODO
+#  declare -a AAA; AAA=("")
+#  for i in "${commit[@]}"
+#  do
+#    AAA+=("${i:22}")
+#  done
+#  printf '%s\n' "${AAA}"
+}
+
+
+#TODO exclude non-git directories or redirect error #{{{
+#function subgittest(){
+#  local sgits
+#  sgits="$(ls "$(pwd)")"
+#  for i in $sgits
+#  do
+#    if [[ ! -d "i" ]]; then
+#      continue
+#    elif
+#      cd ${i}
+#      if [[ -d ".git" ]]; then
+#        gstat
+#      else
+#        continue
+#      fi
+#    fi
+#  done
+#}
+#}}}
+
+function main(){
+  wdir="/home/adrian/bin/gits"
+  local cdir; cdir=$(pwd)
+#  local wdir; wdir="/home/adrian/bin/gits"
+  local tmpfile; tmpfile="/tmp/gitstatus.file"
+  local mdate; mdate=$(date +'%Y-%m-%d-%T')
+
+  cd "$wdir"
+#  fileprobe
+  gits="$(ls "$(pwd)")"
+  clear
+  printf '\e[31;5m%s\033[0m\n\e[21m%s\033[0m\n\e[36m%s\033[0m\n\n' "!GIT!" "$mdate" "Status overview of local git repositories from $wdir"
+  for i in $gits
+  do
+    cd "$i"
+    if [[ ! -d ".git" ]]; then
+      printf '\t\t%s\n' "No git repo in ${i^^}"
+      continue
+    fi
+    gstat
+  done
+
+#  seestat
+  cd "$cdir"
+  exit 0
+}
+main "$@"
+
