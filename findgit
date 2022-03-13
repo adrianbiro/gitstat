@@ -33,15 +33,17 @@ function main(){
   gits="$(ls "$(pwd)")"
   clear
   printf '\e[31;5m%s\033[0m\n\e[21m%s\033[0m\n\e[36m%s\033[0m\n\n' "!GIT!" "$mdate" "Status overview of local git repositories from $wdir"
-  for i in $gits
-  do
-    cd "$i"
-    if [[ ! -d ".git" ]]; then
-      printf '\t\t%s\n' "No git repo in ${i^^}"
-      continue
-    fi
-    gstat
-  done
+
+  find . -maxdepth 2 -mindepth 1 -type d -printf '%f\n'
+#  for i in $gits
+#  do
+#    cd "$i"
+#    if [[ ! -d ".git" ]]; then
+#      printf '\t\t%s\n' "No git repo in ${i^^}"
+#      continue
+#    fi
+#    gstat
+#  done
 
   cd "$cdir"
   exit 0
