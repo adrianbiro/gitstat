@@ -25,7 +25,7 @@ function gstat(){
 
 function main(){
   local cdir; cdir=$(pwd)
-  local wdir; wdir="/home/adrian/bin/gits"
+  local dir; wdir="/home/adrian/bin/gits"
   local tmpfile; tmpfile="/tmp/gitstatus.file"
   local mdate; mdate=$(date +'%Y-%m-%d-%T')
 

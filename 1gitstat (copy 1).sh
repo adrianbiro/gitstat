@@ -2,8 +2,8 @@
 
 function getstat() {
   local lines; lines=$(git status -bs | wc -l)
-#  declare -a commit; commit=("")
-#  declare -a total; total=("")
+  declare -a commit; commit=("")
+  declare -a total; total=("")
   local lastdir; lastdir=$(find "$WDIR" -maxdepth 1 -mindepth 1 -type d -printf '%f\n' | sort -r | awk 'NR==1 {print $0}')
   local localwd; localwd=$(pwd)
   local formtotal; formtotal=${total[-1]}
@@ -15,6 +15,7 @@ function getstat() {
     commit+=("$(pwd)")
   fi
   git status -sb
+  echo "$formtotal $formlocalwd $lastdir"
   if [[ "$lastdir" = "$formlocalwd" ]]; then
     for i in "${commit[@]}"
     do
@@ -35,8 +36,6 @@ function getinfo() {
 function main(){
   local CDIR; CDIR=$(pwd)
   local WDIR; WDIR="/home/adrian/bin/gits"
-  declare -a commit; commit=("")
-  declare -a total; total=("")
   cd $WDIR || return
   getinfo
   for dir in */
@@ -62,13 +61,7 @@ function main(){
         )
     fi
   done
-  for i in "${commit[@]}"
-    do
-      printf '%s\n' ${i:22}
-    done
-
   cd "$CDIR" || return
-  echo ${commit[@]}
   exit 0
 }
 
