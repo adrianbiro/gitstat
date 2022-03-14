@@ -1,0 +1,66 @@
+#!/bin/bash
+
+function getstat() {
+  local lines; lines=$(git status -bs | wc -l)
+  local localwd; localwd=$(pwd)
+
+  if [[ "$lines" -eq 1 ]]; then
+    total+=("$(pwd)")
+  else
+    commit+=("$(pwd)")
+  fi
+  git status -sb
+}
+
+
+function getmodrepos() {
+  for i in "${commit[@]}"
+  do
+    printf '%s\n' ${i:22}
+  done
+}
+
+function getinfo() {
+  local mdate; mdate=$(date +'%Y-%m-%d-%T')
+  local username; username=$(git config user.name)
+  clear
+  printf '\e[31;5m%s\033[0m\n\e[21m%s\033[0m\n\e[36m%s\033[0m\n\n' "!GIT!" "$mdate" "Status overview of local git repositories from $WDIR owned by $username"
+}
+
+
+function main(){
+  local CDIR; CDIR=$(pwd)
+  local WDIR; WDIR="/home/adrian/bin/gits"
+  declare -a commit; commit=("")
+  declare -a total; total=("")
+  cd $WDIR || return
+  getinfo
+  for dir in */
+  do
+    if [[ -d "$dir" ]]; then
+      (
+      cd "$dir" || return
+        if [[ -d ".git" ]]; then
+          getstat
+        else
+        for dir2 in */
+        do
+          if [[ -d "$dir2" ]]; then
+            (
+            cd "$dir2" || return
+              if [[ -d ".git" ]]; then
+                getstat
+              fi
+              )
+          fi
+        done
+        fi
+        )
+    fi
+  done
+  getmodrepos
+  cd "$CDIR" || return
+  exit 0
+}
+
+main "$@"
