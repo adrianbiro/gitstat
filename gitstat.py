@@ -4,7 +4,6 @@ import os
 from datetime import datetime
 
 LOCATION = "/home/adrian/gits"  # The central location for git repos.
-status = False
 
 def get_stat(path):
     os.chdir(path)
@@ -21,6 +20,7 @@ def get_info():
     print(f"{time_stamp}\nStatus overview of local git repositories from: {LOCATION}\nOwned by {user_name}.")
 
 def main():
+    status = False
     """No matter how deep in the directory structure are repos placed, unlike the earlier bash version, this will easily scan all, without too verbose output. """
     get_info()
     for (root, dirs, files) in os.walk(LOCATION):
