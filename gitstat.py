@@ -10,7 +10,7 @@ def get_stat(path):
     os.chdir(path)
     status = subprocess.run(["git", "status", "-sb"], capture_output=True, text=True)
     if len(status.stdout.replace("\n", "").split(" ")) > 2:  # 2 = nothing to commit
-        status = True
+        global status = True
         print("\n" + os.getcwd())
         status = subprocess.run(["git", "status", "-sb"])
 
