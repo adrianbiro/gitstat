@@ -4,11 +4,13 @@ import os
 from datetime import datetime
 
 LOCATION = "/home/adrian/gits"  # The central location for git repos.
+status = False
 
 def get_stat(path):
     os.chdir(path)
     status = subprocess.run(["git", "status", "-sb"], capture_output=True, text=True)
     if len(status.stdout.replace("\n", "").split(" ")) > 2:  # 2 = nothing to commit
+        status = True
         print("\n" + os.getcwd())
         status = subprocess.run(["git", "status", "-sb"])
 
@@ -24,6 +26,8 @@ def main():
     for (root, dirs, files) in os.walk(LOCATION):
         if ".git" in os.listdir(root):
             get_stat(root)
+    if not status:
+        print("There is nothing to do.")
 
 main()
 
