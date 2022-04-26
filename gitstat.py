@@ -5,10 +5,7 @@ import os
 import sys
 import subprocess
 
-<<<<<<< HEAD
-LOCATION = "/home/adrian/gits"  # The central location for git repos.
 todo = []
-=======
 def set_up_location():
     """The central location for git repos."""
     config_file = os.path.join(os.path.expanduser("~"), ".gitstat.ini")
@@ -31,13 +28,12 @@ def set_up_location():
             config.write(f)
         location = read_loc()
     return location
->>>>>>> modrepos
 
 def get_stat(path):
     os.chdir(path)
     status = subprocess.run(["git", "status", "-sb"], capture_output=True, text=True)
     if len(status.stdout.replace("\n", "").split(" ")) > 2:  # 2 = nothing to commit
-        todo.append("42424242")
+        todo.append("42")
         print("\n" + os.getcwd())
         status = subprocess.run(["git", "status", "-sb"])
 
@@ -49,29 +45,16 @@ def get_info(location):
 
 def main(location):
     """No matter how deep in the directory structure are repos placed, unlike the earlier bash version, this will easily scan all, without too verbose output. """
-<<<<<<< HEAD
-    get_info()
-    for (root, dirs, files) in os.walk(LOCATION):
-        if ".git" in os.listdir(root):
-            get_stat(root)
-    if not todo:
-        print("There is nothing to do.")
-main()
-=======
     if location:
         get_info(location)
         for (root, dirs, files) in os.walk(location):
             if ".git" in os.listdir(root):
                 get_stat(root)
+    if not todo:
+        print("There is nothing to do.")
 
 if __name__ == "__main__":
     main(set_up_location())
->>>>>>> modrepos
-
-
-
-
-
 
 
 """
