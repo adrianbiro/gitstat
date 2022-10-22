@@ -38,6 +38,7 @@ def set_up_location():
     return location
 
 
+# TODO git status --porcelain=v1
 def get_stat(path):
     os.chdir(path)
     status = subprocess.run(["git", "status", "-sb"], capture_output=True, text=True)
@@ -65,6 +66,7 @@ def main(location):
         for (root, dirs, files) in os.walk(location):
             if ".git" in os.listdir(root):
                 get_stat(root)
+                #continue
     if not todo:
         print("There is nothing to do.")
 
