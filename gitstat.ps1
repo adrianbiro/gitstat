@@ -1,6 +1,6 @@
 <#
     .SYNOPSIS
-        Check if checksum is valid
+        Check changes in git repos recursively.
     
     .DESCRIPTION  
         
