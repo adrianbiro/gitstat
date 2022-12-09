@@ -1,10 +1,26 @@
 #python3 $(Join-Path -Path $HOME -ChildPath "src\gitstat\gitstat.py")
+$oldPath = $PWD.Path
+function SetUpLocation () {
+    $configFile = Join-Path -Path $HOME -ChildPath ".gitstat.xml"
+    if ( -not (Test-Path $configFile)) {
+        $str = "{0}{1}{2}" -f
+                "If this isn't the root level of your git repos run program again from that location:`n`t", 
+                $oldPath, "`nTo continue write yes. " 
+        $Islocation = Read-Host $str
+        if ($Islocation -match "yes") {
+            New-Item $configFile -ItemType File | % {Set-Content $_.FullName "<Location>$oldPath</Location>"}
+        }
+    }
+    return ([xml]$XmlDocument = Get-Content -Path $configFile).Location
 
-$location = Join-Path -Path $HOME -ChildPath "src"  # TODO config 
+
+}
+#$location = Join-Path -Path $HOME -ChildPath "src"  # TODO config 
+$location = SetUpLocation
 $OutputEncoding = [Console]::OutputEncoding  # nejde more
 $owner = git config user.name | Out-String -NoNewline  #TODO  Adri├ín B├¡ro
 #$owner = $env:UserName
-$oldPath = $PWD.Path
+
 
 "{0}`nStatus overview of local git repositories from: {1}`nOwned by {2}.`n" -f 
     (Get-Date -Format "dd/MM/yyyy HH:mm:ss"), $location, $owner
