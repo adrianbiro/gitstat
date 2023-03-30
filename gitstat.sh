@@ -20,7 +20,7 @@ function main {
     local CDIR
     CDIR=$(pwd)
     local WDIR
-    WDIR=init #"/home/adrian/gits"
+    WDIR="/home/adrian/gits"
     getinfo
 
     find "${WDIR}" -type d -name ".git" -prune -print0 | while IFS= read -r -d '' repo; do
