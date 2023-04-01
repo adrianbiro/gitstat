@@ -9,18 +9,13 @@ function getstat() {
         git status -sb
     fi
 }
-function init {
-    if [[ -f "${HOME}/.gitstat.ini" ]]; then
-        tmp="$(grep location .gitstat.ini)"
-        return "${tmp##location = }"
-    fi
-    #TODO file
-}
+
 function main {
     local CDIR
     CDIR=$(pwd)
     local WDIR
-    WDIR="/home/adrian/gits"
+    WDIR="${GITS:?"To run ${0##*/} export GITS=/path/to/all/repos"}"
+    
     getinfo
 
     find "${WDIR}" -type d -name ".git" -prune -print0 | while IFS= read -r -d '' repo; do
