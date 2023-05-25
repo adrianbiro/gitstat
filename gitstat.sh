@@ -11,17 +11,16 @@ function getstat() {
 }
 
 function main {
-    local CDIR
-    CDIR=$(pwd)
     local WDIR
     WDIR="${GITS:?"To run ${0##*/} export GITS=/path/to/all/repos"}"
+
+    pushd "${PWD}" >"/dev/null" || return
+    trap "popd >'/dev/null' || return" EXIT
     
     getinfo
 
     find "${WDIR}" -type d -name ".git" -prune -print0 | while IFS= read -r -d '' repo; do
         cd "${repo%/*}" && getstat
     done
-
-    cd "${CDIR}" >"/dev/null" || return
 }
 main "${@}"
